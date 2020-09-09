@@ -1,0 +1,46 @@
+def simulationWithoutDrug(numViruses, maxPop, maxBirthProb, clearProb,
+                          numTrials):
+    """
+    Run the simulation and plot the graph for problem 3 (no drugs are used,
+    viruses do not have any drug resistance).    
+    For each of numTrials trial, instantiates a patient, runs a simulation
+    for 300 timesteps, and plots the average virus population size as a
+    function of time.
+
+    numViruses: number of SimpleVirus to create for patient (an integer)
+    maxPop: maximum virus population for patient (an integer)
+    maxBirthProb: Maximum reproduction probability (a float between 0-1)        
+    clearProb: Maximum clearance probability (a float between 0-1)
+    numTrials: number of simulation runs to execute (an integer)
+    """
+    
+   
+
+    Viruses = []
+    for i in range(numViruses):
+        Viruses.append(SimpleVirus(maxBirthProb, clearProb))
+    totalVirusPop = []
+        
+    for t in range(numTrials):
+        patient = Patient(Viruses, maxPop)
+        virusPop = []
+        
+        for i in range(300):
+            patient.update()
+            virusPop.append(len(patient.getViruses()))
+        totalVirusPop.append(virusPop)
+        
+    averagePopSizeList = []
+    for i in range(300):
+        avrPop = 0
+             
+        for t in range(numTrials):
+            avrPop += totalVirusPop[t][i]
+        averagePopSizeList.append(avrPop / numTrials)
+            
+    pylab.plot(averagePopSizeList, label = "SimpleVirus")
+    pylab.title("SimpleVirus simulation")
+    pylab.xlabel("Time Steps")
+    pylab.ylabel("Average Virus Population")
+    pylab.legend(loc = "best")
+    pylab.show()
