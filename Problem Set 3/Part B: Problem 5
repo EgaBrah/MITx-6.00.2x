@@ -1,0 +1,58 @@
+def simulationWithDrug(numViruses, maxPop, maxBirthProb, clearProb, resistances,
+                       mutProb, numTrials):
+    """
+    Runs simulations and plots graphs for problem 5.
+
+    For each of numTrials trials, instantiates a patient, runs a simulation for
+    150 timesteps, adds guttagonol, and runs the simulation for an additional
+    150 timesteps.  At the end plots the average virus population size
+    (for both the total virus population and the guttagonol-resistant virus
+    population) as a function of time.
+
+    numViruses: number of ResistantVirus to create for patient (an integer)
+    maxPop: maximum virus population for patient (an integer)
+    maxBirthProb: Maximum reproduction probability (a float between 0-1)        
+    clearProb: maximum clearance probability (a float between 0-1)
+    resistances: a dictionary of drugs that each ResistantVirus is resistant to
+                 (e.g., {'guttagonol': False})
+    mutProb: mutation probability for each ResistantVirus particle
+             (a float between 0-1). 
+    numTrials: number of simulation runs to execute (an integer)
+    
+    """
+
+    virusTotalList = [0] * 300
+    virusResistList = [0] * 300
+
+
+    for trial in range(numTrials):
+        Viruses = []
+
+        for i in range(numViruses):
+            Viruses.append(ResistantVirus(maxBirthProb, clearProb, resistances, mutProb))
+        
+        tp = TreatedPatient(Viruses, maxPop)
+
+        for i in range(300):
+            if i > 149:
+                tp.addPrescription('guttagonol')
+            tp.update()
+            virusTotalList[i] += tp.getTotalPop()
+            virusResistList[i] += tp.getResistPop(['guttagonol'])
+        #print(Viruses)
+        #print(virusTotalList)
+        #print(virusResistList)
+            
+    averageVirusTotalList = [x / float(numTrials) for x in virusTotalList]
+    averageVirusResistList = [x / float(numTrials) for x in virusResistList]
+                
+            
+            
+            
+    pylab.plot(averageVirusTotalList, label = 'Total Virus Count')
+    pylab.plot(averageVirusResistList, label = 'Guttagonol resistant Count')
+    pylab.title("Virus resistance simulation")
+    pylab.xlabel("Time Step")
+    pylab.ylabel("Virus Count")
+    pylab.legend(loc = "best")
+    pylab.show()
