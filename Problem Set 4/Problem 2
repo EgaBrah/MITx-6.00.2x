@@ -1,0 +1,18 @@
+import os
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+import numpy as np
+def r_squared(y, estimated):
+    """
+    Calculate the R-squared error term.
+    Args:
+        y: list with length N, representing the y-coords of N sample points
+        estimated: a list of values estimated by the regression model
+    Returns:
+        a float for the R-squared error term
+    """
+    y = np.array(y)
+    estimated = np.array(estimated)
+    
+    error = ((estimated - y)**2).sum()
+    meanError = error/len(y)
+    return 1 - (meanError/np.var(y))
