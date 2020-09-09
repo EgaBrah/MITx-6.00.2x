@@ -1,0 +1,38 @@
+def find_combination(choices, total):
+    import os
+    os.environ["OPENBLAS_NUM_THREADS"] = "1"
+    import numpy as np
+    """
+    choices: a non-empty list of ints
+    total: a positive int
+ 
+    Returns result, a numpy.array of length len(choices) 
+    such that
+        * each element of result is 0 or 1
+        * sum(result*choices) == total
+        * sum(result) is as small as possible
+    In case of ties, returns any result that works.
+    If there is no result that gives the exact total, 
+    pick the one that gives sum(result*choices) closest 
+    to total without going over.
+    """
+    ones = []
+    for i in range (len(choices)):
+        ones.append(1)
+    lc = len(choices)**2
+    mem = [ones, abs(sum(choices[:])-total)]
+    for B in range(lc):
+        anss = (len(bin(lc)[2:])-len(bin(B)[2:]))*'0'+bin(B)[2:]
+        ans = []
+        for i in anss:
+            ans.append(int(i))
+        guess = choices[:]
+        for i in range(len(choices[:])):
+            guess[i] *= ans[i]
+        if sum(guess[:]) == total:
+            return np.array(ans)
+        else:
+            if total - sum(guess) <= mem[1] and total - sum(guess)>=0:
+                mem = [ans, total - sum(guess)]
+    return np.array(mem[0])
+            
