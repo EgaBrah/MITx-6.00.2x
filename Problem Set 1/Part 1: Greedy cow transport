@@ -1,0 +1,39 @@
+def greedy_cow_transport(cows,limit=10):
+    """
+    Uses a greedy heuristic to determine an allocation of cows that attempts to
+    minimize the number of spaceship trips needed to transport all the cows. The
+    returned allocation of cows may or may not be optimal.
+    The greedy heuristic should follow the following method:
+
+    1. As long as the current trip can fit another cow, add the largest cow that will fit
+        to the trip
+    2. Once the trip is full, begin a new trip to transport the remaining cows
+
+    Does not mutate the given dictionary of cows.
+
+    Parameters:
+    cows - a dictionary of name (string), weight (int) pairs
+    limit - weight limit of the spaceship (an int)
+    
+    Returns:
+    A list of lists, with each inner list containing the names of cows
+    transported on a particular trip and the overall list containing all the
+    trip
+    """
+    
+    tripsList = [] #variable tripsList which adds to total List of lists
+    totalList = []
+
+    
+    while sum(cows.values()) > 0: #kol siunciamu karviu saras mazesnis nei duotuju karviu
+        tripsList = [] #sukuriamas pagrindinis sarasas
+        totalWeight = 0 #sukuriamas nepastovus kintamasis skaiciuti masei
+        for cow, value in sorted(cows.items(), key=lambda x: x[1], reverse = True):# for name and value of sorted cows dictionary reversed from Upper
+            if cows[cow] != 0 and value + totalWeight <= limit: # if cows not equal for 0 and total weight+cows weight is not over limit
+                tripsList.append(cow) #I add name
+                totalWeight += value # I add weight
+                cows[cow] = 0 #set cows value for 0
+        totalList.append(tripsList) # adding cows trip to total list
+    return totalList # returning list of list
+
+    pass
